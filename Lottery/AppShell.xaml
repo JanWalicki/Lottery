@@ -3,7 +3,7 @@
     x:Class="Lottery.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:Lottery"
+    xmlns:local="clr-namespace:Lottery.Views"
     Shell.FlyoutBehavior="Disabled"
     Title="Lottery">
 
@@ -11,5 +11,8 @@
         Title="Home"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
-
+    <ShellContent 
+        Title="Class Detail" 
+        ContentTemplate="{DataTemplate local:ClassPage}" 
+        Route="classPage"/>
 </Shell>

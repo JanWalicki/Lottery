@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Lottery.Views.MainPage"
+             Title="MainPage">
+    <VerticalStackLayout>
+        <Label 
+            Text="Witaj, wybierz klasę lub dodaj nową"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+
+        <ScrollView>
+            <CollectionView ItemsSource="{Binding Classes}" SelectionMode="Single">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame x:Name="classPanel" WidthRequest="500" Margin="5">
+                            <Button Text="{Binding Name}" x:Name="classLabel" WidthRequest="100"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.ClassSelectedCommand}" 
+                                    CommandParameter="{Binding .}"/>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+
+        <StackLayout IsVisible="{Binding IsFormVisible}">
+            <Entry Placeholder="Class" Text="{Binding NewClassName}" />
+            <Button Text="Submit" Command="{Binding AddClassCommand}" />
+        </StackLayout>
+
+        <Button Text="+" Command="{Binding AddClassCommand}" IsVisible="{Binding IsButtonVisible}" 
+                VerticalOptions="End" HorizontalOptions="Center" Margin="10" />
+    </VerticalStackLayout>
+</ContentPage>

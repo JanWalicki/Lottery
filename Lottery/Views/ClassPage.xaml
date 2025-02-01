@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Lottery.Views.ClassPage"
+             Title="ClassPage">
+    <VerticalStackLayout>
+        <StackLayout Padding="20">
+            <Label Text="Class Name:" FontSize="24" />
+            <Label Text="{Binding SelectedClass.Name}" FontSize="18" />
+            <CollectionView ItemsSource="{Binding SelectedClass.Students}" SelectionMode="Single">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{Binding Id}" Margin="0,0,3,0"/>
+                            <Label Text="{Binding Name}" Margin="0,0,3,0"/>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <StackLayout IsVisible="{Binding IsFormVisible}">
+                <Entry Placeholder="Student name" Text="{Binding NewStudentName}" />
+                <Button Text="Submit" Command="{Binding AddStudentCommand}" />
+            </StackLayout>
+
+            <Button Text="+" Command="{Binding AddStudentCommand}" IsVisible="{Binding IsButtonVisible}" 
+                VerticalOptions="End" HorizontalOptions="Center" Margin="10" />
+
+            <Button Text="Start Lottery" Command="{Binding StartLotteryCommand}"/>
+            <Label Text="{Binding LotteryWinner.Name}"/>
+        </StackLayout>
+    </VerticalStackLayout>
+</ContentPage>
