@@ -13,6 +13,7 @@
                         <StackLayout Orientation="Horizontal">
                             <Label Text="{Binding Id}" Margin="0,0,3,0"/>
                             <Label Text="{Binding Name}" Margin="0,0,3,0"/>
+                            <CheckBox IsChecked="{Binding IsPresentToday, Mode=TwoWay}"/>
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

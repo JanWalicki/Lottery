@@ -11,11 +11,27 @@ namespace Lottery.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public bool Present { get; set; } = true;
-        public List<DateOnly> AbsenceDays { get; set; } = new List<DateOnly>();
+        public List<DateOnly> PresentDays { get; set; } = new List<DateOnly>();
         public int ClassId { get; set; }
+        [ObservableProperty]
+        public int number;
 
         public int LastPicked { get; set; }
+
+        public bool IsPresentToday
+        {
+            get => PresentDays.Contains(DateOnly.FromDateTime(DateTime.Now));
+            set
+            {
+                var today = DateOnly.FromDateTime(DateTime.Now);
+                if (value)
+                    AddPresence(today);
+                else
+                    RemovePresence(today);
+
+                OnPropertyChanged(nameof(IsPresentToday));
+            }
+        }
 
         public Student(string name, int classId)
         {
@@ -23,9 +39,16 @@ namespace Lottery.Models
             ClassId = classId;
         }
 
-        public void AddAbsence(DateOnly date)
+        public void AddPresence(DateOnly date)
         {
-            AbsenceDays.Add(date);
+            if (!PresentDays.Contains(date))
+                PresentDays.Add(date);
+        }
+
+        public void RemovePresence(DateOnly date)
+        {
+            if (PresentDays.Contains(date))
+                PresentDays.Remove(date);
         }
     }
 }

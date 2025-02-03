@@ -66,14 +66,14 @@ namespace Lottery.Services
             var student = _context.Students.Find(studentId);
             if (student != null)
             {
-                student.AddAbsence(date);
+                student.AddPresence(date);
                 _context.SaveChanges();
             }
         }
 
         public void AddLuckyNumber(int number, DateOnly date)
         {
-            var luckyNumber = new LuckyNumber { Number = number, Date = date };
+            var luckyNumber = new LuckyNumber(number, date);
             _context.LuckyNumbers.Add(luckyNumber);
             _context.SaveChanges();
         }

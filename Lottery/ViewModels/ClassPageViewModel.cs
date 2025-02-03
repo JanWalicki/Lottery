@@ -30,7 +30,7 @@ namespace Lottery.ViewModels
 
         public ClassPageViewModel(int selectedClassId)
         {
-            SelectedClass = dbService.GetAllClasses().Find(c => c.Id == selectedClassId)!;
+            Refresh(selectedClassId);
         }
 
         [RelayCommand]
@@ -44,6 +44,7 @@ namespace Lottery.ViewModels
             {
                 dbService.AddStudent(new Student(NewStudentName, SelectedClass.Id));
                 Refresh(SelectedClass.Id);
+                AllocateNumbers();
 
                 NewStudentName = String.Empty;
                 IsButtonVisible = !IsButtonVisible;
@@ -54,23 +55,31 @@ namespace Lottery.ViewModels
         [RelayCommand]
         public void StartLottery()
         {
-            int max = SelectedClass.Students.Count;
+            int max = SelectedClass.Students.Where(s=> s.IsPresentToday == true).Count();
 
             if (max <= 1)
-                return;
+                return; //ADD NOTIFICATION THAT THERE ARE NOT ENOUGH STUDENTS
 
             int rePickingFrequency = 3;
 
             if (max == 4)
                 rePickingFrequency = 2;
+            if (max == 3)
+                rePickingFrequency = 1;
+            if (max == 2)
+                rePickingFrequency = 0;
 
             List<Student> possibleStudents = SelectedClass.Students
-                                            .Where(s => s.LastPicked <= SelectedClass.LotteryCount - rePickingFrequency || s.LastPicked == 0)
+                                            .Where(s => (s.LastPicked <= SelectedClass.LotteryCount - rePickingFrequency 
+                                                        || s.LastPicked == 0) 
+                                                        && s.IsPresentToday == true)
                                             .ToList();
 
             if (possibleStudents.Count == 0)
-                return;
+                return; //ADD NOTIFICATION THAT THERE ARE NO STUDENTS TO PICK
 
+
+            //LATER CREATIVE ANIMATION
             Random random = new Random();
             int lotteryWinnerId = random.Next(0, possibleStudents.Count);
             LotteryWinner = possibleStudents[lotteryWinnerId];
@@ -81,6 +90,13 @@ namespace Lottery.ViewModels
             dbService.UpdateClass(SelectedClass);
         }
 
+        private void AllocateNumbers() 
+        {
+            foreach (var student in SelectedClass.Students)
+            {
+                student.Number = SelectedClass.Students.IndexOf(student) + 1;
+            }
+        }
 
         private void Refresh(int id)
         {

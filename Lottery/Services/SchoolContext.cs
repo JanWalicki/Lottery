@@ -16,7 +16,7 @@ namespace Lottery.Services
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=Database3.db");
+            optionsBuilder.UseSqlite("Data Source=Database8.db");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -29,10 +29,6 @@ namespace Lottery.Services
             modelBuilder.Entity<Student>()
                 .Property(s => s.LastPicked)
                 .HasDefaultValue((byte)0);
-
-            modelBuilder.Entity<Student>()
-                .Property(s => s.Present)
-                .HasDefaultValue(true);
         }
     }
 }

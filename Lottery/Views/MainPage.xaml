@@ -9,6 +9,8 @@
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
 
+        <Label Text="{Binding LuckyNumber}" FontSize="18"/>
+
         <ScrollView>
             <CollectionView ItemsSource="{Binding Classes}" SelectionMode="Single">
                 <CollectionView.ItemTemplate>

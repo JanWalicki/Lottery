@@ -31,9 +31,35 @@ namespace Lottery.ViewModels
         [ObservableProperty]
         public string newClassName = String.Empty;
 
+
+        [ObservableProperty]
+        public int luckyNumber;
+
         public MainPageViewModel()
         {
-            Classes = new ObservableCollection<Class>(dbService.GetAllClasses());
+            Refresh();
+
+            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+            LuckyNumber dbLuckyNumber = dbService.GetLuckyNumberByDate(today);
+
+            if (dbLuckyNumber == null && LuckyNumber == 0)
+                luckyNumber = GenerateLuckyNumber(today);
+            else
+                luckyNumber = dbLuckyNumber.Number;
+
+        }
+
+        private int GenerateLuckyNumber(DateOnly today)
+        {
+            if(Classes.Count <= 0)
+                return 0;
+
+            int max = Classes.Max(c=>c.Students.Count);
+            Random random = new Random();
+            int luckyNumber = random.Next(1, max);
+
+            dbService.AddLuckyNumber(luckyNumber, today);
+            return luckyNumber;
         }
 
         [RelayCommand]
@@ -57,6 +83,7 @@ namespace Lottery.ViewModels
         private void Refresh()
         {
             Classes = new ObservableCollection<Class>(dbService.GetAllClasses());
+
         }
 
         [RelayCommand]
