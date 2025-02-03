@@ -98,9 +98,23 @@ namespace Lottery.ViewModels
             }
         }
 
+
         private void Refresh(int id)
         {
             SelectedClass = dbService.GetAllClasses().Find(c => c.Id == id)!;
         }
+
+
+        [RelayCommand]
+        public void DeleteStudent(Student student)
+        {
+            if (student != null)
+            {
+                dbService.DeleteStudent(student.Id);  // Assuming this method exists
+                Refresh(SelectedClass.Id);
+                AllocateNumbers();
+            }
+        }
+
     }
 }

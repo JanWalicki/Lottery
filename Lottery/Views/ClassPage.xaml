@@ -7,17 +7,27 @@
         <StackLayout Padding="20">
             <Label Text="Class Name:" FontSize="24" />
             <Label Text="{Binding SelectedClass.Name}" FontSize="18" />
-            <CollectionView ItemsSource="{Binding SelectedClass.Students}" SelectionMode="Single">
+            <CollectionView x:Name="StudentsCollectionView" ItemsSource="{Binding SelectedClass.Students}" SelectionMode="Single">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout Orientation="Horizontal">
-                            <Label Text="{Binding Id}" Margin="0,0,3,0"/>
+                            <Label Text="{Binding Number}" Margin="0,0,3,0"/>
                             <Label Text="{Binding Name}" Margin="0,0,3,0"/>
                             <CheckBox IsChecked="{Binding IsPresentToday, Mode=TwoWay}"/>
+                            <Button Text="❌" 
+                                Command="{Binding Source={x:Reference StudentsCollectionView}, Path=BindingContext.DeleteStudentCommand}" 
+                                CommandParameter="{Binding}" />
+
+                            <Button Text="✏️" 
+                                Command="{Binding Source={x:Reference StudentsCollectionView}, Path=BindingContext.RenameStudentCommand}" 
+                                CommandParameter="{Binding}" />
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+
+
+
 
             <StackLayout IsVisible="{Binding IsFormVisible}">
                 <Entry Placeholder="Student name" Text="{Binding NewStudentName}" />
