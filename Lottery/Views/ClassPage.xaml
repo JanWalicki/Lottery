@@ -4,45 +4,69 @@
              x:Class="Lottery.Views.ClassPage"
              Title="Klasa">
     <VerticalStackLayout>
-        <Button Text="Wróć" Command="{Binding GoBackCommand}"/>
-        <StackLayout>
-            <Label Text="Klasa:"/>
-            <Label Text="{Binding SelectedClass.Name}"/>
-            <CollectionView x:Name="StudentsCollectionView" ItemsSource="{Binding SelectedClass.Students}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout Orientation="Horizontal">
-                            <Label Text="{Binding Number}" />
-                            <Label Text="{Binding Name}" />
-                            <CheckBox IsChecked="{Binding IsPresentToday, Mode=TwoWay}"/>
-                            <Button Text="❌" 
+
+        <Grid>
+            <!-- Define two columns -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+
+
+            <ScrollView Grid.Column="0" class="students">
+                <VerticalStackLayout>
+                    <StackLayout Orientation="Horizontal" StyleClass="head">
+                    <Label Text="Nr." StyleClass="col1"></Label>
+                    <Label Text="Nazwisko Imię" StyleClass="col2Head"></Label>
+                    <Label Text="Obecny" StyleClass="col2"></Label>
+                    </StackLayout>
+                    <CollectionView x:Name="StudentsCollectionView" ItemsSource="{Binding SelectedClass.Students}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="{Binding Number}" StyleClass="col1"/>
+                                    <Label Text="{Binding Name}" StyleClass="col2"/>
+                                    <CheckBox IsChecked="{Binding IsPresentToday, Mode=TwoWay}" StyleClass="col1"/>
+                                    <Button Text="❌" StyleClass="col3"
                                 Command="{Binding Source={x:Reference StudentsCollectionView}, Path=BindingContext.DeleteStudentCommand}" 
                                 CommandParameter="{Binding}" />
 
-                            <Button Text="✏️" 
+                                    <Button Text="✏️" StyleClass="col3"
                                 Command="{Binding Source={x:Reference StudentsCollectionView}, Path=BindingContext.RenameStudentCommand}" 
                                 CommandParameter="{Binding}" />
-                        </StackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-
-            <StackLayout IsVisible="{Binding IsEditFormVisible}">
-                <Label Text="Zmień dane ucznia:"/>
-                <Entry Text="{Binding NewStudentNameForEdit}" Placeholder="Nowe Nazwisko i imię" />
-                <Button Text="Save" Command="{Binding SaveRenamedStudentCommand}" />
-            </StackLayout>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </ScrollView>
 
 
-            <StackLayout IsVisible="{Binding IsFormVisible}">
-                <Entry Placeholder="Nazwisko Imię" Text="{Binding NewStudentName}" />
-                <Button Text="Submit" Command="{Binding AddStudentCommand}" />
-            </StackLayout>
+            <VerticalStackLayout Grid.Column="1" StyleClass="menageColumn">
 
-            <Button StyleClass="smallButton" Text="+" Command="{Binding AddStudentCommand}" IsVisible="{Binding IsButtonVisible}" />
+                <Button Text="Wróć"  StyleClass="backButton" Command="{Binding GoBackCommand}"/>
+                <Label Text="Klasa:"/>
+                <Label Text="{Binding SelectedClass.Name}"/>
+                <StackLayout IsVisible="{Binding IsEditFormVisible}">
+                    <Label Text="Zmień dane ucznia:"/>
+                    <Entry Text="{Binding NewStudentNameForEdit}" Placeholder="Nowe Nazwisko i imię" />
+                    <Button Text="Save" Command="{Binding SaveRenamedStudentCommand}" />
+                </StackLayout>
 
-            <Button Text="Start Lottery" Command="{Binding StartLotteryCommand}"/>
-            <Label Text="{Binding LotteryWinner.Name}"/>
-        </StackLayout>
+
+                <StackLayout IsVisible="{Binding IsFormVisible}">
+                    <Entry Placeholder="Nazwisko Imię" Text="{Binding NewStudentName}" />
+                    <Button Text="Submit" Command="{Binding AddStudentCommand}" />
+                </StackLayout>
+
+                <Button StyleClass="smallButton" Text="Dodaj Ucznia" Command="{Binding AddStudentCommand}" IsVisible="{Binding IsButtonVisible}" />
+
+                <Button Text="Start Lottery" Command="{Binding StartLotteryCommand}"/>
+                <Label Text="Wylosowano"/>
+                <Label Text="{Binding LotteryWinner.Name}"/>
+            </VerticalStackLayout>
+
+        </Grid>
     </VerticalStackLayout>
 </ContentPage>

@@ -11,13 +11,22 @@
     height: 40;
 }
 
+.backButton {
+    background-color: #fca311;
+    color: #10375C;
+    font-size: 10;
+    width: 100;
+    height: 40;
+    margin: 5;
+}
+
 .tile {
     width: 60;
     height: 60;
     margin: 5;
 }
 
-^scrollView {
+^classes {
     height: 250;
 }
 
@@ -32,7 +41,7 @@
 }
 
 .menageColumn > stackLayout {
-    margin: 55;
+    margin: 30;
 }
 
 .entry {
@@ -41,4 +50,31 @@
 
 .menageColumn > button {
     margin: 55;
+}
+
+.head {
+    font-style: bold;
+}
+
+.col1 {
+    width: 30;
+}
+
+.col2 {
+    width: 500;
+}
+
+.col3 {
+    width: 50;
+    margin: 5,0,5,0;
+    height: 30;
+}
+
+.col2Head {
+    width: 490;
+}
+
+
+.students {
+    margin: 20;
 }

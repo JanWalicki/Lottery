@@ -13,7 +13,7 @@
             </Grid.ColumnDefinitions>
 
 
-            <ScrollView Grid.Column="0">
+            <ScrollView Grid.Column="0" StyleClass="classes">
                 <CollectionView ItemsSource="{Binding Classes}" VerticalOptions="FillAndExpand" >
                     <CollectionView.ItemsLayout>
                         <GridItemsLayout Span="3" Orientation="Horizontal"/>

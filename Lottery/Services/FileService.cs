@@ -9,7 +9,7 @@ namespace Lottery.Services
     public class FileService
     {
         private string ClassesFile = Path.Combine(FileSystem.AppDataDirectory, "classes.txt");
-        private string AbsenceFile = Path.Combine(FileSystem.AppDataDirectory, "absence.txt");
+        private string AbsenceFile = Path.Combine(FileSystem.AppDataDirectory, "presence.txt");
         private string LuckyNumbersFile = Path.Combine(FileSystem.AppDataDirectory, "lucky_numbers.txt");
 
         public FileService()
