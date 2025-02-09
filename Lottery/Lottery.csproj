@@ -57,14 +57,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiCss Remove="Resources\Styles\Styles.css" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Include="Resources\Styles\Styles.css" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">

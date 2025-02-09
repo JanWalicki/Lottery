@@ -22,11 +22,8 @@ namespace Lottery.ViewModels
         [ObservableProperty]
         public bool isFormVisible = false;
 
-        public bool IsButtonVisible 
-        { 
-            get { return !IsFormVisible; } 
-            set { IsFormVisible = !value; } 
-        }
+        [ObservableProperty]
+        public bool isButtonVisible = true;
 
         [ObservableProperty]
         public string newClassName = String.Empty;
@@ -66,7 +63,10 @@ namespace Lottery.ViewModels
         public void AddClass()
         {
             if (IsButtonVisible)
+            {
                 IsButtonVisible = !IsButtonVisible;
+                IsFormVisible = !IsFormVisible;   
+            }
 
 
             if (!string.IsNullOrEmpty(NewClassName))
@@ -76,6 +76,7 @@ namespace Lottery.ViewModels
 
                 NewClassName = String.Empty;
                 IsButtonVisible = !IsButtonVisible;
+                IsFormVisible = !IsFormVisible;
             }
 
         }

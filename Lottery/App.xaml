@@ -10,5 +10,6 @@
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
+        <StyleSheet Source="/Resources/Styles/Styles.css" />
     </Application.Resources>
 </Application>

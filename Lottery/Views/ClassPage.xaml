@@ -2,17 +2,18 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Lottery.Views.ClassPage"
-             Title="ClassPage">
+             Title="Klasa">
     <VerticalStackLayout>
-        <StackLayout Padding="20">
-            <Label Text="Class Name:" FontSize="24" />
-            <Label Text="{Binding SelectedClass.Name}" FontSize="18" />
+        <Button Text="Back" Command="{Binding GoBackCommand}"/>
+        <StackLayout>
+            <Label Text="Class Name:"/>
+            <Label Text="{Binding SelectedClass.Name}"/>
             <CollectionView x:Name="StudentsCollectionView" ItemsSource="{Binding SelectedClass.Students}" SelectionMode="Single">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout Orientation="Horizontal">
-                            <Label Text="{Binding Number}" Margin="0,0,3,0"/>
-                            <Label Text="{Binding Name}" Margin="0,0,3,0"/>
+                            <Label Text="{Binding Number}" />
+                            <Label Text="{Binding Name}" />
                             <CheckBox IsChecked="{Binding IsPresentToday, Mode=TwoWay}"/>
                             <Button Text="❌" 
                                 Command="{Binding Source={x:Reference StudentsCollectionView}, Path=BindingContext.DeleteStudentCommand}" 
@@ -27,7 +28,7 @@
             </CollectionView>
 
             <StackLayout IsVisible="{Binding IsEditFormVisible}">
-                <Label Text="Edit Student Name:" FontSize="18" />
+                <Label Text="Edit Student Name:"/>
                 <Entry Text="{Binding NewStudentNameForEdit}" Placeholder="Enter newasad name" />
                 <Button Text="Save" Command="{Binding SaveRenamedStudentCommand}" />
             </StackLayout>
@@ -38,8 +39,7 @@
                 <Button Text="Submit" Command="{Binding AddStudentCommand}" />
             </StackLayout>
 
-            <Button Text="+" Command="{Binding AddStudentCommand}" IsVisible="{Binding IsButtonVisible}" 
-                VerticalOptions="End" HorizontalOptions="Center" Margin="10" />
+            <Button StyleClass="smallButton" Text="+" Command="{Binding AddStudentCommand}" IsVisible="{Binding IsButtonVisible}" />
 
             <Button Text="Start Lottery" Command="{Binding StartLotteryCommand}"/>
             <Label Text="{Binding LotteryWinner.Name}"/>

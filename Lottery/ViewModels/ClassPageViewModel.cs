@@ -16,11 +16,9 @@ namespace Lottery.ViewModels
 
         [ObservableProperty]
         public bool isFormVisible = false;
-        public bool IsButtonVisible
-        {
-            get { return !IsFormVisible; }
-            set { IsFormVisible = !value; }
-        }
+
+        [ObservableProperty]
+        public bool isButtonVisible = true;
 
         [ObservableProperty]
         public string newStudentName = String.Empty;
@@ -37,10 +35,12 @@ namespace Lottery.ViewModels
         [ObservableProperty]
         private string newStudentNameForEdit;
 
-
+        private LuckyNumber luckyNumber;
         public ClassPageViewModel(int selectedClassId)
         {
             Refresh(selectedClassId);
+            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+            luckyNumber = dbService.GetLuckyNumberByDate(today);
         }
 
 
@@ -82,7 +82,10 @@ namespace Lottery.ViewModels
         public void AddStudent()
         {
             if (IsButtonVisible)
+            {
                 IsButtonVisible = !IsButtonVisible;
+                IsFormVisible = !IsFormVisible;
+            }
 
 
             if (!string.IsNullOrEmpty(NewStudentName))
@@ -93,13 +96,14 @@ namespace Lottery.ViewModels
 
                 NewStudentName = String.Empty;
                 IsButtonVisible = !IsButtonVisible;
+                IsFormVisible = !IsFormVisible;
             }
         }
 
         [RelayCommand]
         public void StartLottery()
         {
-            int max = SelectedClass.Students.Where(s=> s.IsPresentToday == true).Count();
+            int max = SelectedClass.Students.Where(s=> s.IsPresentToday == true && s.Number != luckyNumber.Number).Count();
 
             if (max <= 1)
                 return; //ADD NOTIFICATION THAT THERE ARE NOT ENOUGH STUDENTS
@@ -116,7 +120,8 @@ namespace Lottery.ViewModels
             List<Student> possibleStudents = SelectedClass.Students
                                             .Where(s => (s.LastPicked <= SelectedClass.LotteryCount - rePickingFrequency 
                                                         || s.LastPicked == 0) 
-                                                        && s.IsPresentToday == true)
+                                                        && s.IsPresentToday == true
+                                                        && s.Number != luckyNumber.Number)
                                             .ToList();
 
             if (possibleStudents.Count == 0)
@@ -156,6 +161,12 @@ namespace Lottery.ViewModels
                 Refresh(SelectedClass.Id);
                 AllocateNumbers();
             }
+        }
+
+        [RelayCommand]
+        public static async void GoBack()
+        {
+            await Shell.Current.GoToAsync($"///mainPage");
         }
 
     }

@@ -2,35 +2,46 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Lottery.Views.MainPage"
-             Title="MainPage">
+             Title="Szkoła">
     <VerticalStackLayout>
-        <Label 
-            Text="Witaj, wybierz klasę lub dodaj nową"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
 
-        <Label Text="{Binding LuckyNumber}" FontSize="18"/>
+        <Grid>
+            <!-- Define two columns -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
 
-        <ScrollView>
-            <CollectionView ItemsSource="{Binding Classes}" SelectionMode="Single">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Frame x:Name="classPanel" WidthRequest="500" Margin="5">
-                            <Button Text="{Binding Name}" x:Name="classLabel" WidthRequest="100"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.ClassSelectedCommand}" 
-                                    CommandParameter="{Binding .}"/>
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </ScrollView>
 
-        <StackLayout IsVisible="{Binding IsFormVisible}">
-            <Entry Placeholder="Class" Text="{Binding NewClassName}" />
-            <Button Text="Submit" Command="{Binding AddClassCommand}" />
-        </StackLayout>
+            <ScrollView Grid.Column="0">
+                <CollectionView ItemsSource="{Binding Classes}" VerticalOptions="FillAndExpand" >
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Span="3" Orientation="Horizontal"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Button StyleClass="tile" Text="{Binding Name}"
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.ClassSelectedCommand}" 
+                        CommandParameter="{Binding .}"/>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
 
-        <Button Text="+" Command="{Binding AddClassCommand}" IsVisible="{Binding IsButtonVisible}" 
-                VerticalOptions="End" HorizontalOptions="Center" Margin="10" />
+
+
+            <VerticalStackLayout Grid.Column="1" StyleClass="menageColumn">
+                <Label Text="Szczęśliwy numerek:"/>
+                <Label x:Name="LuckyNumber" Text="{Binding LuckyNumber}"/>
+
+                <StackLayout IsVisible="{Binding IsFormVisible}">
+                    <Entry StyleClass="entry" Placeholder="Class" Text="{Binding NewClassName}" />
+                    <Button StyleClass="smallButton" Text="Dodaj" Command="{Binding AddClassCommand}" />
+                </StackLayout>
+
+                <Button StyleClass="smallButton" Text="Dodaj klasę" Command="{Binding AddClassCommand}" IsVisible="{Binding IsButtonVisible}" />
+            </VerticalStackLayout>
+
+        </Grid>
     </VerticalStackLayout>
 </ContentPage>
