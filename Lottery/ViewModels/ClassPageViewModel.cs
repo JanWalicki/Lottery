@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Lottery.Models;
 using Lottery.Services;
+using System.Collections.ObjectModel;
 
 namespace Lottery.ViewModels
 {
@@ -71,7 +72,7 @@ namespace Lottery.ViewModels
             
             
             Refresh(SelectedClass.Id);
-            AllocateNumbers();
+
 
             var prev = SelectedClass;
             SelectedClass = null;
@@ -92,7 +93,6 @@ namespace Lottery.ViewModels
             {
                 dbService.AddStudent(new Student(NewStudentName, SelectedClass.Id));
                 Refresh(SelectedClass.Id);
-                AllocateNumbers();
 
                 NewStudentName = String.Empty;
                 IsButtonVisible = !IsButtonVisible;
@@ -141,6 +141,7 @@ namespace Lottery.ViewModels
 
         private void AllocateNumbers() 
         {
+            SelectedClass.Students = new ObservableCollection<Student>(SelectedClass.Students.OrderBy(s => s.Name));
             foreach (var student in SelectedClass.Students)
             {
                 student.Number = SelectedClass.Students.IndexOf(student) + 1;
@@ -150,6 +151,7 @@ namespace Lottery.ViewModels
         private void Refresh(int id)
         {
             SelectedClass = dbService.GetAllClasses().Find(c => c.Id == id)!;
+            AllocateNumbers();
         }
 
         [RelayCommand]
@@ -159,7 +161,6 @@ namespace Lottery.ViewModels
             {
                 dbService.DeleteStudent(student.Id);  // Assuming this method exists
                 Refresh(SelectedClass.Id);
-                AllocateNumbers();
             }
         }
 

@@ -52,6 +52,7 @@ namespace Lottery.ViewModels
                 return 0;
 
             int max = Classes.Max(c=>c.Students.Count);
+            if(max <= 0) return 0;
             Random random = new Random();
             int luckyNumber = random.Next(1, max);
 
