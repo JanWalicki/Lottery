@@ -28,9 +28,54 @@ namespace Lottery.ViewModels
         [ObservableProperty]
         public Student lotteryWinner = new Student("", 0);
 
+        [ObservableProperty]
+        private Student selectedStudentForRenaming;
+
+        [ObservableProperty]
+        private bool isEditFormVisible = false;
+
+        [ObservableProperty]
+        private string newStudentNameForEdit;
+
+
         public ClassPageViewModel(int selectedClassId)
         {
             Refresh(selectedClassId);
+        }
+
+
+        [RelayCommand]
+        public void RenameStudent(Student student)
+        {
+            if (student == null) return;
+
+            SelectedStudentForRenaming = student;
+            NewStudentNameForEdit = student.Name; // Pre-fill with current name
+            IsEditFormVisible = true;
+        }
+
+        [RelayCommand]
+        public void SaveRenamedStudent()
+        {
+            if (SelectedStudentForRenaming == null || string.IsNullOrWhiteSpace(NewStudentNameForEdit))
+                return;
+
+            SelectedStudentForRenaming.Name = NewStudentNameForEdit;
+            dbService.UpdateStudent(SelectedStudentForRenaming); // Assuming this method exists
+
+            // Reset fields
+            SelectedStudentForRenaming = null;
+            NewStudentNameForEdit = string.Empty;
+            IsEditFormVisible = false;
+           
+            
+            
+            Refresh(SelectedClass.Id);
+            AllocateNumbers();
+
+            var prev = SelectedClass;
+            SelectedClass = null;
+            SelectedClass = prev;
         }
 
         [RelayCommand]
@@ -50,7 +95,6 @@ namespace Lottery.ViewModels
                 IsButtonVisible = !IsButtonVisible;
             }
         }
-
 
         [RelayCommand]
         public void StartLottery()
@@ -98,12 +142,10 @@ namespace Lottery.ViewModels
             }
         }
 
-
         private void Refresh(int id)
         {
             SelectedClass = dbService.GetAllClasses().Find(c => c.Id == id)!;
         }
-
 
         [RelayCommand]
         public void DeleteStudent(Student student)

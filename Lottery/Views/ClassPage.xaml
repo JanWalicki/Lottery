@@ -26,7 +26,11 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-
+            <StackLayout IsVisible="{Binding IsEditFormVisible}">
+                <Label Text="Edit Student Name:" FontSize="18" />
+                <Entry Text="{Binding NewStudentNameForEdit}" Placeholder="Enter newasad name" />
+                <Button Text="Save" Command="{Binding SaveRenamedStudentCommand}" />
+            </StackLayout>
 
 
             <StackLayout IsVisible="{Binding IsFormVisible}">
