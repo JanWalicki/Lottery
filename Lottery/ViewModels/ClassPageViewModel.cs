@@ -8,7 +8,7 @@ namespace Lottery.ViewModels
 {
     public partial class ClassPageViewModel : ObservableObject
     {
-        DatabaseService dbService = new DatabaseService();
+        FileService dbService = new FileService();
 
         [ObservableProperty]
         public Class selectedClass = new Class("CLASS NOT FOUND");
@@ -41,7 +41,7 @@ namespace Lottery.ViewModels
         {
             Refresh(selectedClassId);
             DateOnly today = DateOnly.FromDateTime(DateTime.Now);
-            luckyNumber = dbService.GetLuckyNumberByDate(today);
+            luckyNumber = dbService.GetLuckyNumberByDate(today)!;
         }
 
 
@@ -51,7 +51,7 @@ namespace Lottery.ViewModels
             if (student == null) return;
 
             SelectedStudentForRenaming = student;
-            NewStudentNameForEdit = student.Name; // Pre-fill with current name
+            NewStudentNameForEdit = student.Name;
             IsEditFormVisible = true;
         }
 
@@ -62,7 +62,7 @@ namespace Lottery.ViewModels
                 return;
 
             SelectedStudentForRenaming.Name = NewStudentNameForEdit;
-            dbService.UpdateStudent(SelectedStudentForRenaming); // Assuming this method exists
+            dbService.UpdateStudent(SelectedStudentForRenaming);
 
             // Reset fields
             SelectedStudentForRenaming = null;
@@ -141,7 +141,6 @@ namespace Lottery.ViewModels
 
         private void AllocateNumbers() 
         {
-            SelectedClass.Students = new ObservableCollection<Student>(SelectedClass.Students.OrderBy(s => s.Name));
             foreach (var student in SelectedClass.Students)
             {
                 student.Number = SelectedClass.Students.IndexOf(student) + 1;
@@ -150,7 +149,9 @@ namespace Lottery.ViewModels
 
         private void Refresh(int id)
         {
-            SelectedClass = dbService.GetAllClasses().Find(c => c.Id == id)!;
+            Class dbClass = dbService.GetAllClasses().Find(c => c.Id == id)!;
+            dbClass.Students = new ObservableCollection<Student>(dbClass.Students.OrderBy(s => s.Name).ToList());
+            SelectedClass = dbClass;
             AllocateNumbers();
         }
 

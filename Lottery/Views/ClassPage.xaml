@@ -4,11 +4,11 @@
              x:Class="Lottery.Views.ClassPage"
              Title="Klasa">
     <VerticalStackLayout>
-        <Button Text="Back" Command="{Binding GoBackCommand}"/>
+        <Button Text="Wróć" Command="{Binding GoBackCommand}"/>
         <StackLayout>
-            <Label Text="Class Name:"/>
+            <Label Text="Klasa:"/>
             <Label Text="{Binding SelectedClass.Name}"/>
-            <CollectionView x:Name="StudentsCollectionView" ItemsSource="{Binding SelectedClass.Students}" SelectionMode="Single">
+            <CollectionView x:Name="StudentsCollectionView" ItemsSource="{Binding SelectedClass.Students}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout Orientation="Horizontal">
@@ -28,14 +28,14 @@
             </CollectionView>
 
             <StackLayout IsVisible="{Binding IsEditFormVisible}">
-                <Label Text="Edit Student Name:"/>
-                <Entry Text="{Binding NewStudentNameForEdit}" Placeholder="Enter newasad name" />
+                <Label Text="Zmień dane ucznia:"/>
+                <Entry Text="{Binding NewStudentNameForEdit}" Placeholder="Nowe Nazwisko i imię" />
                 <Button Text="Save" Command="{Binding SaveRenamedStudentCommand}" />
             </StackLayout>
 
 
             <StackLayout IsVisible="{Binding IsFormVisible}">
-                <Entry Placeholder="Student name" Text="{Binding NewStudentName}" />
+                <Entry Placeholder="Nazwisko Imię" Text="{Binding NewStudentName}" />
                 <Button Text="Submit" Command="{Binding AddStudentCommand}" />
             </StackLayout>
 

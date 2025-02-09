@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Lottery.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,13 +43,21 @@ namespace Lottery.Models
         public void AddPresence(DateOnly date)
         {
             if (!PresentDays.Contains(date))
+            {
                 PresentDays.Add(date);
+                FileService dbService = new FileService();
+                dbService.AddPresence(this.Id, date);
+            }
         }
 
         public void RemovePresence(DateOnly date)
         {
             if (PresentDays.Contains(date))
+            {
                 PresentDays.Remove(date);
+                FileService dbService = new FileService();
+                dbService.RemovePresence(this.Id, date);
+            }
         }
     }
 }

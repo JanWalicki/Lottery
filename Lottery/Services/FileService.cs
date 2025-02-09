@@ -6,13 +6,13 @@ using System.Linq;
 
 namespace Lottery.Services
 {
-    public class DatabaseService
+    public class FileService
     {
         private string ClassesFile = Path.Combine(FileSystem.AppDataDirectory, "classes.txt");
         private string AbsenceFile = Path.Combine(FileSystem.AppDataDirectory, "absence.txt");
         private string LuckyNumbersFile = Path.Combine(FileSystem.AppDataDirectory, "lucky_numbers.txt");
 
-        public DatabaseService()
+        public FileService()
         {
             InitializeFiles();
         }
@@ -165,9 +165,17 @@ namespace Lottery.Services
             }
         }
 
-        public void AddAbsence(int studentId, DateOnly date)
+        public void AddPresence(int studentId, DateOnly date)
         {
             File.AppendAllText(AbsenceFile, $"{studentId}|{date}\n");
+        }
+
+        public void RemovePresence(int studentId, DateOnly date)
+        {
+            var lines = File.ReadAllLines(AbsenceFile).ToList();
+            string recordToRemove = $"{studentId}|{date}";
+            lines = lines.Where(line => !line.StartsWith(recordToRemove)).ToList();
+            File.WriteAllLines(AbsenceFile, lines);
         }
 
         public void AddLuckyNumber(int number, DateOnly date)

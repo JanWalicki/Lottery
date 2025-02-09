@@ -13,7 +13,7 @@ namespace Lottery.ViewModels
 {
     public partial class MainPageViewModel : ObservableObject
     {
-        DatabaseService dbService = new DatabaseService();
+        FileService dbService = new FileService();
 
         [ObservableProperty]
         ObservableCollection<Class> classes = new();
@@ -84,7 +84,7 @@ namespace Lottery.ViewModels
 
         private void Refresh()
         {
-            Classes = new ObservableCollection<Class>(dbService.GetAllClasses());
+            Classes = new ObservableCollection<Class>(dbService.GetAllClasses().OrderBy(c=>c.Name).ToList());
 
         }
 
