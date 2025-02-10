@@ -56,10 +56,13 @@ namespace Lottery.ViewModels
         }
 
         [RelayCommand]
-        public void SaveRenamedStudent()
+        public async Task SaveRenamedStudent()
         {
             if (SelectedStudentForRenaming == null || string.IsNullOrWhiteSpace(NewStudentNameForEdit))
+            {
+                await Application.Current.MainPage.DisplayAlert("Błąd", "Wpisz Nazwisko i Imię ucznia", "OK");
                 return;
+            }
 
             SelectedStudentForRenaming.Name = NewStudentNameForEdit;
             dbService.UpdateStudent(SelectedStudentForRenaming);
@@ -80,12 +83,13 @@ namespace Lottery.ViewModels
         }
 
         [RelayCommand]
-        public void AddStudent()
+        public async Task AddStudent()
         {
             if (IsButtonVisible)
             {
                 IsButtonVisible = !IsButtonVisible;
                 IsFormVisible = !IsFormVisible;
+                return;
             }
 
 
@@ -98,15 +102,22 @@ namespace Lottery.ViewModels
                 IsButtonVisible = !IsButtonVisible;
                 IsFormVisible = !IsFormVisible;
             }
+            else
+            {
+                await Application.Current.MainPage.DisplayAlert("Błąd", "Wpisz Nazwisko i Imię ucznia", "OK");
+            }
         }
 
         [RelayCommand]
-        public void StartLottery()
+        public async Task StartLottery()
         {
             int max = SelectedClass.Students.Where(s=> s.IsPresentToday == true && s.Number != luckyNumber.Number).Count();
 
             if (max <= 1)
-                return; //ADD NOTIFICATION THAT THERE ARE NOT ENOUGH STUDENTS
+            {
+                await Application.Current.MainPage.DisplayAlert("Błąd", "Zbyt mało uczniów aby przeprowadzić losowanie", "OK");
+                return;
+            }
 
             int rePickingFrequency = 3;
 
@@ -125,8 +136,10 @@ namespace Lottery.ViewModels
                                             .ToList();
 
             if (possibleStudents.Count == 0)
-                return; //ADD NOTIFICATION THAT THERE ARE NO STUDENTS TO PICK
-
+            { 
+                await Application.Current.MainPage.DisplayAlert("Błąd", "Zbyt mało uczniów aby przeprowadzić losowanie", "OK");
+                return;
+            }
 
             //LATER CREATIVE ANIMATION
             Random random = new Random();

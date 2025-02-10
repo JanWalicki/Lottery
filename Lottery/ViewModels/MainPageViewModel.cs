@@ -64,12 +64,13 @@ namespace Lottery.ViewModels
         }
 
         [RelayCommand]
-        public void AddClass()
+        public async Task AddClass()
         {
             if (IsButtonVisible)
             {
                 IsButtonVisible = !IsButtonVisible;
-                IsFormVisible = !IsFormVisible;   
+                IsFormVisible = !IsFormVisible;
+                return;
             }
 
 
@@ -81,6 +82,10 @@ namespace Lottery.ViewModels
                 NewClassName = String.Empty;
                 IsButtonVisible = !IsButtonVisible;
                 IsFormVisible = !IsFormVisible;
+            }
+            else
+            {
+                await Application.Current.MainPage.DisplayAlert("Błąd", "Wpisz oznaczenie klasy", "OK");
             }
 
         }
