@@ -6,7 +6,6 @@
     <VerticalStackLayout>
 
         <Grid>
-            <!-- Define two columns -->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*" />
                 <ColumnDefinition Width="2*" />
@@ -14,7 +13,7 @@
 
 
             <ScrollView Grid.Column="0" StyleClass="classes">
-                <CollectionView ItemsSource="{Binding Classes}" VerticalOptions="FillAndExpand" >
+                <CollectionView ItemsSource="{Binding Classes}"  >
                     <CollectionView.ItemsLayout>
                         <GridItemsLayout Span="3" Orientation="Horizontal"/>
                     </CollectionView.ItemsLayout>
@@ -35,7 +34,7 @@
                 <Label x:Name="LuckyNumber" Text="{Binding LuckyNumber}"/>
 
                 <StackLayout IsVisible="{Binding IsFormVisible}">
-                    <Entry StyleClass="entry" Placeholder="Class" Text="{Binding NewClassName}" />
+                    <Entry StyleClass="entry" Placeholder="Class" Text="{Binding NewClassName}" MaxLength="3"/>
                     <Button StyleClass="smallButton" Text="Dodaj" Command="{Binding AddClassCommand}" />
                 </StackLayout>
 

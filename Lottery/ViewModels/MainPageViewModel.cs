@@ -36,6 +36,10 @@ namespace Lottery.ViewModels
         {
             Refresh();
 
+        }
+
+        private void UpdateLuckyNumber()
+        {
             DateOnly today = DateOnly.FromDateTime(DateTime.Now);
             LuckyNumber dbLuckyNumber = dbService.GetLuckyNumberByDate(today);
 
@@ -43,7 +47,6 @@ namespace Lottery.ViewModels
                 luckyNumber = GenerateLuckyNumber(today);
             else
                 luckyNumber = dbLuckyNumber.Number;
-
         }
 
         private int GenerateLuckyNumber(DateOnly today)
@@ -85,7 +88,7 @@ namespace Lottery.ViewModels
         private void Refresh()
         {
             Classes = new ObservableCollection<Class>(dbService.GetAllClasses().OrderBy(c=>c.Name).ToList());
-
+            UpdateLuckyNumber();
         }
 
         [RelayCommand]

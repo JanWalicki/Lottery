@@ -149,13 +149,11 @@ namespace Lottery.Services
 
         public void DeleteStudent(int studentId)
         {
-            // Remove from classes file
             var classLines = File.ReadAllLines(ClassesFile)
                 .Where(line => !(line.StartsWith("S|") && int.Parse(line.Split('|')[1]) == studentId))
                 .ToArray();
             File.WriteAllLines(ClassesFile, classLines);
 
-            // Remove from absence file
             if (File.Exists(AbsenceFile))
             {
                 var absenceLines = File.ReadAllLines(AbsenceFile)

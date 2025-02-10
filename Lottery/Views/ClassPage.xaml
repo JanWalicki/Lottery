@@ -6,7 +6,6 @@
     <VerticalStackLayout>
 
         <Grid>
-            <!-- Define two columns -->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*" />
                 <ColumnDefinition Width="2*" />
@@ -16,15 +15,15 @@
 
             <ScrollView Grid.Column="0" class="students">
                 <VerticalStackLayout>
-                    <StackLayout Orientation="Horizontal" StyleClass="head">
+                    <HorizontalStackLayout StyleClass="head">
                     <Label Text="Nr." StyleClass="col1"></Label>
                     <Label Text="Nazwisko Imię" StyleClass="col2Head"></Label>
                     <Label Text="Obecny" StyleClass="col2"></Label>
-                    </StackLayout>
+                    </HorizontalStackLayout>
                     <CollectionView x:Name="StudentsCollectionView" ItemsSource="{Binding SelectedClass.Students}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <StackLayout Orientation="Horizontal">
+                                <HorizontalStackLayout>
                                     <Label Text="{Binding Number}" StyleClass="col1"/>
                                     <Label Text="{Binding Name}" StyleClass="col2"/>
                                     <CheckBox IsChecked="{Binding IsPresentToday, Mode=TwoWay}" StyleClass="col1"/>
@@ -35,7 +34,7 @@
                                     <Button Text="✏️" StyleClass="col3"
                                 Command="{Binding Source={x:Reference StudentsCollectionView}, Path=BindingContext.RenameStudentCommand}" 
                                 CommandParameter="{Binding}" />
-                                </StackLayout>
+                                </HorizontalStackLayout>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
@@ -50,19 +49,19 @@
                 <Label Text="{Binding SelectedClass.Name}"/>
                 <StackLayout IsVisible="{Binding IsEditFormVisible}">
                     <Label Text="Zmień dane ucznia:"/>
-                    <Entry Text="{Binding NewStudentNameForEdit}" Placeholder="Nowe Nazwisko i imię" />
+                    <Entry Text="{Binding NewStudentNameForEdit}" Placeholder="Nowe Nazwisko i imię" MaxLength="50"/>
                     <Button Text="Save" Command="{Binding SaveRenamedStudentCommand}" />
                 </StackLayout>
 
 
                 <StackLayout IsVisible="{Binding IsFormVisible}">
-                    <Entry Placeholder="Nazwisko Imię" Text="{Binding NewStudentName}" />
+                    <Entry Placeholder="Nazwisko Imię" Text="{Binding NewStudentName}" MaxLength="50"/>
                     <Button Text="Submit" Command="{Binding AddStudentCommand}" />
                 </StackLayout>
 
                 <Button StyleClass="smallButton" Text="Dodaj Ucznia" Command="{Binding AddStudentCommand}" IsVisible="{Binding IsButtonVisible}" />
 
-                <Button Text="Start Lottery" Command="{Binding StartLotteryCommand}"/>
+                <Button Text="Wylosuj do odpowiedzi" Command="{Binding StartLotteryCommand}"/>
                 <Label Text="Wylosowano"/>
                 <Label Text="{Binding LotteryWinner.Name}"/>
             </VerticalStackLayout>

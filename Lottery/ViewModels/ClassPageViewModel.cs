@@ -160,15 +160,17 @@ namespace Lottery.ViewModels
         {
             if (student != null)
             {
-                dbService.DeleteStudent(student.Id);  // Assuming this method exists
+                dbService.DeleteStudent(student.Id); 
                 Refresh(SelectedClass.Id);
             }
         }
 
         [RelayCommand]
-        public static async void GoBack()
+        public static async Task GoBack()
         {
-            await Shell.Current.GoToAsync($"///mainPage");
+            Shell.Current.Items.Clear();
+            Application.Current!.MainPage = new AppShell();
+            await Shell.Current.GoToAsync("//mainPage");
         }
 
     }
