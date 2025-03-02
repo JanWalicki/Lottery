@@ -50,13 +50,13 @@
                 <StackLayout IsVisible="{Binding IsEditFormVisible}">
                     <Label Text="Zmień dane ucznia:"/>
                     <Entry Text="{Binding NewStudentNameForEdit}" Placeholder="Nowe Nazwisko i imię" MaxLength="50"/>
-                    <Button Text="Save" Command="{Binding SaveRenamedStudentCommand}" />
+                    <Button Text="Zapisz" Command="{Binding SaveRenamedStudentCommand}" />
                 </StackLayout>
 
 
                 <StackLayout IsVisible="{Binding IsFormVisible}">
                     <Entry Placeholder="Nazwisko Imię" Text="{Binding NewStudentName}" MaxLength="50"/>
-                    <Button Text="Submit" Command="{Binding AddStudentCommand}" />
+                    <Button Text="Dodaj" Command="{Binding AddStudentCommand}" />
                 </StackLayout>
 
                 <Button StyleClass="smallButton" Text="Dodaj Ucznia" Command="{Binding AddStudentCommand}" IsVisible="{Binding IsButtonVisible}" />

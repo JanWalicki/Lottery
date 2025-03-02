@@ -3,12 +3,14 @@ using CommunityToolkit.Mvvm.Input;
 using Lottery.Models;
 using Lottery.Services;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 
 namespace Lottery.ViewModels
 {
     public partial class ClassPageViewModel : ObservableObject
     {
         FileService dbService = new FileService();
+        LuckyNumberService luckyNumService = new LuckyNumberService();
 
         [ObservableProperty]
         public Class selectedClass = new Class("CLASS NOT FOUND");
@@ -36,14 +38,15 @@ namespace Lottery.ViewModels
         [ObservableProperty]
         private string newStudentNameForEdit;
 
-        private LuckyNumber luckyNumber;
+        private int luckyNumber;
         public ClassPageViewModel(int selectedClassId)
         {
             Refresh(selectedClassId);
-            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
-            luckyNumber = dbService.GetLuckyNumberByDate(today)!;
         }
-
+        private void UpdateLuckyNumber()
+        {
+            luckyNumber = luckyNumService.GetLuckyNumber();
+        }
 
         [RelayCommand]
         public void RenameStudent(Student student)
@@ -58,7 +61,7 @@ namespace Lottery.ViewModels
         [RelayCommand]
         public async Task SaveRenamedStudent()
         {
-            if (SelectedStudentForRenaming == null || string.IsNullOrWhiteSpace(NewStudentNameForEdit))
+            if (SelectedStudentForRenaming == null || string.IsNullOrWhiteSpace(NewStudentNameForEdit) || !Regex.IsMatch(NewStudentNameForEdit, @"^[A-Za-z0-9\s]+$"))
             {
                 await Application.Current.MainPage.DisplayAlert("Błąd", "Wpisz Nazwisko i Imię ucznia", "OK");
                 return;
@@ -95,12 +98,19 @@ namespace Lottery.ViewModels
 
             if (!string.IsNullOrEmpty(NewStudentName))
             {
-                dbService.AddStudent(new Student(NewStudentName, SelectedClass.Id));
-                Refresh(SelectedClass.Id);
+                if (Regex.IsMatch(NewStudentName, @"^[A-Za-z0-9\s]+$"))
+                {
+                    dbService.AddStudent(new Student(NewStudentName, SelectedClass.Id));
+                    Refresh(SelectedClass.Id);
 
-                NewStudentName = String.Empty;
-                IsButtonVisible = !IsButtonVisible;
-                IsFormVisible = !IsFormVisible;
+                    NewStudentName = String.Empty;
+                    IsButtonVisible = !IsButtonVisible;
+                    IsFormVisible = !IsFormVisible;
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("Błąd", "Dozwolone są tylko litery i cyfry", "OK");
+                }
             }
             else
             {
@@ -111,7 +121,7 @@ namespace Lottery.ViewModels
         [RelayCommand]
         public async Task StartLottery()
         {
-            int max = SelectedClass.Students.Where(s=> s.IsPresentToday == true && s.Number != luckyNumber.Number).Count();
+            int max = SelectedClass.Students.Where(s=> s.IsPresentToday == true && s.Number != luckyNumber).Count();
 
             if (max <= 1)
             {
@@ -132,7 +142,7 @@ namespace Lottery.ViewModels
                                             .Where(s => (s.LastPicked <= SelectedClass.LotteryCount - rePickingFrequency 
                                                         || s.LastPicked == 0) 
                                                         && s.IsPresentToday == true
-                                                        && s.Number != luckyNumber.Number)
+                                                        && s.Number != luckyNumber)
                                             .ToList();
 
             if (possibleStudents.Count == 0)
@@ -166,6 +176,7 @@ namespace Lottery.ViewModels
             dbClass.Students = new ObservableCollection<Student>(dbClass.Students.OrderBy(s => s.Name).ToList());
             SelectedClass = dbClass;
             AllocateNumbers();
+            UpdateLuckyNumber();
         }
 
         [RelayCommand]

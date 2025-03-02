@@ -8,12 +8,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Lottery.ViewModels
 {
     public partial class MainPageViewModel : ObservableObject
     {
         FileService dbService = new FileService();
+        LuckyNumberService luckyNumService = new LuckyNumberService();
 
         [ObservableProperty]
         ObservableCollection<Class> classes = new();
@@ -40,27 +42,7 @@ namespace Lottery.ViewModels
 
         private void UpdateLuckyNumber()
         {
-            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
-            LuckyNumber dbLuckyNumber = dbService.GetLuckyNumberByDate(today);
-
-            if (dbLuckyNumber == null && LuckyNumber == 0)
-                luckyNumber = GenerateLuckyNumber(today);
-            else
-                luckyNumber = dbLuckyNumber.Number;
-        }
-
-        private int GenerateLuckyNumber(DateOnly today)
-        {
-            if(Classes.Count <= 0)
-                return 0;
-
-            int max = Classes.Max(c=>c.Students.Count);
-            if(max <= 0) return 0;
-            Random random = new Random();
-            int luckyNumber = random.Next(1, max);
-
-            dbService.AddLuckyNumber(luckyNumber, today);
-            return luckyNumber;
+            LuckyNumber = luckyNumService.GetLuckyNumber();
         }
 
         [RelayCommand]
@@ -74,14 +56,21 @@ namespace Lottery.ViewModels
             }
 
 
-            if (!string.IsNullOrEmpty(NewClassName))
+            if (!string.IsNullOrWhiteSpace(NewClassName))
             {
-                dbService.AddClass(new Class(NewClassName));
-                Refresh();
+                if (Regex.IsMatch(NewClassName, @"^[A-Za-z0-9\s]+$"))
+                {
+                    dbService.AddClass(new Class(NewClassName));
+                    Refresh();
 
-                NewClassName = String.Empty;
-                IsButtonVisible = !IsButtonVisible;
-                IsFormVisible = !IsFormVisible;
+                    NewClassName = String.Empty;
+                    IsButtonVisible = !IsButtonVisible;
+                    IsFormVisible = !IsFormVisible;
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("Błąd", "Dozwolone są tylko litery i cyfry", "OK");
+                }
             }
             else
             {
