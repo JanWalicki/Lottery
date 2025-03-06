@@ -145,6 +145,9 @@ namespace Lottery.Services
                 }
             }
             File.WriteAllLines(ClassesFile, lines);
+
+            foreach (var student in classEntity.Students)
+                UpdateStudent(student);
         }
 
         public void DeleteStudent(int studentId)
