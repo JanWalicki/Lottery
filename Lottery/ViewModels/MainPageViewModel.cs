@@ -55,10 +55,16 @@ namespace Lottery.ViewModels
                 return;
             }
 
+            if (Classes.FirstOrDefault(c => c.Name == NewClassName) != null)
+            {
+                await Application.Current.MainPage.DisplayAlert("Błąd", "Taka klasa już istnieje", "OK");
+                return;
+            }
+
 
             if (!string.IsNullOrWhiteSpace(NewClassName))
             {
-                if (Regex.IsMatch(NewClassName, @"^[A-Za-z0-9\s]+$"))
+                if (Regex.IsMatch(NewClassName, @"^[A-Za-z0-9ęółśążźćńĘÓŁŚĄŻŹĆŃ\s]+$"))
                 {
                     dbService.AddClass(new Class(NewClassName));
                     Refresh();
@@ -81,7 +87,7 @@ namespace Lottery.ViewModels
 
         private void Refresh()
         {
-            Classes = new ObservableCollection<Class>(dbService.GetAllClasses().OrderBy(c=>c.Name).ToList());
+            Classes = new ObservableCollection<Class>(dbService.GetAllClasses().OrderBy(c => c.Name).ToList());
             UpdateLuckyNumber();
         }
 

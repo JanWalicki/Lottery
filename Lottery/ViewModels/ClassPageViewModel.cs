@@ -61,7 +61,7 @@ namespace Lottery.ViewModels
         [RelayCommand]
         public async Task SaveRenamedStudent()
         {
-            if (SelectedStudentForRenaming == null || string.IsNullOrWhiteSpace(NewStudentNameForEdit) || !Regex.IsMatch(NewStudentNameForEdit, @"^[A-Za-z0-9\s]+$"))
+            if (SelectedStudentForRenaming == null || string.IsNullOrWhiteSpace(NewStudentNameForEdit) || !Regex.IsMatch(NewStudentNameForEdit, @"^[A-Za-z0-9ęółśążźćńĘÓŁŚĄŻŹĆŃ\s]+$"))
             {
                 await Application.Current.MainPage.DisplayAlert("Błąd", "Wpisz Nazwisko i Imię ucznia", "OK");
                 return;
@@ -74,9 +74,9 @@ namespace Lottery.ViewModels
             SelectedStudentForRenaming = null;
             NewStudentNameForEdit = string.Empty;
             IsEditFormVisible = false;
-           
-            
-            
+
+
+
             Refresh(SelectedClass.Id);
 
 
@@ -98,7 +98,7 @@ namespace Lottery.ViewModels
 
             if (!string.IsNullOrEmpty(NewStudentName))
             {
-                if (Regex.IsMatch(NewStudentName, @"^[A-Za-z0-9\s]+$"))
+                if (Regex.IsMatch(NewStudentName, @"^[A-Za-z0-9ęółśążźćńĘÓŁŚĄŻŹĆŃ\s]+$"))
                 {
                     dbService.AddStudent(new Student(NewStudentName, SelectedClass.Id));
                     Refresh(SelectedClass.Id);
@@ -121,7 +121,9 @@ namespace Lottery.ViewModels
         [RelayCommand]
         public async Task StartLottery()
         {
-            int max = SelectedClass.Students.Where(s=> s.IsPresentToday == true && s.Number != luckyNumber).Count();
+            UpdateLuckyNumber();
+
+            int max = SelectedClass.Students.Where(s => s.IsPresentToday == true && s.Number != luckyNumber).Count();
 
             if (max <= 1)
             {
@@ -139,14 +141,14 @@ namespace Lottery.ViewModels
                 rePickingFrequency = 0;
 
             List<Student> possibleStudents = SelectedClass.Students
-                                            .Where(s => (s.LastPicked <= SelectedClass.LotteryCount - rePickingFrequency 
-                                                        || s.LastPicked == 0) 
+                                            .Where(s => (s.LastPicked <= SelectedClass.LotteryCount - rePickingFrequency
+                                                        || s.LastPicked == 0)
                                                         && s.IsPresentToday == true
                                                         && s.Number != luckyNumber)
                                             .ToList();
 
             if (possibleStudents.Count == 0)
-            { 
+            {
                 await Application.Current.MainPage.DisplayAlert("Błąd", "Zbyt mało uczniów aby przeprowadzić losowanie", "OK");
                 return;
             }
@@ -162,7 +164,7 @@ namespace Lottery.ViewModels
             dbService.UpdateClass(SelectedClass);
         }
 
-        private void AllocateNumbers() 
+        private void AllocateNumbers()
         {
             foreach (var student in SelectedClass.Students)
             {
@@ -176,7 +178,6 @@ namespace Lottery.ViewModels
             dbClass.Students = new ObservableCollection<Student>(dbClass.Students.OrderBy(s => s.Name).ToList());
             SelectedClass = dbClass;
             AllocateNumbers();
-            UpdateLuckyNumber();
         }
 
         [RelayCommand]
@@ -184,7 +185,7 @@ namespace Lottery.ViewModels
         {
             if (student != null)
             {
-                dbService.DeleteStudent(student.Id); 
+                dbService.DeleteStudent(student.Id);
                 Refresh(SelectedClass.Id);
             }
         }
